@@ -1,0 +1,97 @@
+- Exceptable
+
+Exceptable is a library for database driver writers, to capture RAISE EXCEPTION from PostgreSQL stored procedures, and converting those exceptions sanely to Python-level exceptions.
+
+This library is intended to be used in an application environment with multiple stored-procedures, and manipulates the Postgres output from RAISE EXCEPTION.
+
+It can also be used to capture information from standard Postgres exception states, and convert them into more useful exceptions.
+
+-- Integration
+
+--- For Driver/API developers
+
+As Exceptable is predominately designed to be integrated closely into the database access layer, the decorators assume a single point of interaction with the database.
+In the case of Simpycity, this is handled by the __execute__ function in core.py.
+
+To set up Exceptable for your own driver layer, the first step will always be to initialize the core objects, as such:
+
+{{{
+     from exceptable.exceptable import System, Except
+     from psycopg2 import InternalError, ProgrammingError
+
+     base = Except(InternalError, {
+         'Exception': Exception,
+         'NotFoundException': NotFoundError,
+     })
+
+     system = System(ProgrammingError, {
+         'permission denied': PermissionError
+     })
+}}}
+
+This defines the basic Exceptable decorators, and what patterns they should attempt to match. These patterns will then be matched against the main error message emitted by PostgreSQL.
+
+Once the base decorators are defined, they are used as:
+{{{
+     @exceptions.base
+     @exceptions.system
+     def __execute__(self, query):
+         ...
+}}}
+
+Any exception thrown by the underlying database driver, in this case psycopg2, will be compared and mapped to the appropriate Exceptable exception, if any.
+
+--- For Application Developers
+
+To use Exceptable as an application developer, using Exceptable without direct driver or adapter support is very possible.
+
+Identical setup is done at the application level, adding to the core exceptions class of your application.
+Once the core exceptions have been defined and added to Exceptable object, the same decorators are used throughout your application to catch database exceptions.
+
+However, as it is not implemented at the driver level, it does require more work and more cautious use to add support.
+
+A good location to add support would be at the model layer, in the form of:
+
+{{{
+class baseModel ( yourAbstraction.model ) :
+
+     @exceptions.base
+     @exceptions.system
+     def save(self, *args, **kwargs):
+         super(baseModel, self).save(*args, **kwargs)
+}}}
+
+This would allow, as with the direct driver integration, a single point for exception handling to occur. However, this will also need to have the individual SELECT functions wrapped as well, to catch other violations.
+
+-- Usage
+
+Once the exceptions are properly mapped and managed by the Exceptable library, we need to be able to register which exceptions will trigger a response.
+
+To do this, core Exceptable objects provide a .register method, allowing for a Python exception and a database pattern and new exception to be defined.
+
+To add an exception definition, one would do:
+{{{
+exceptions.base.register("MyException",MyExceptionObject)
+}}}
+
+From this point, any InternalError whose exception string matches the MyException value will now be re-raised as a MyExceptionObject.
+
+Exceptions can be removed from the map via:
+
+{{{
+exceptions.base.remove("MyException")
+}}}
+
+Any exception that matches the pattern, but has not been registered, will be re-raised as the base exception type - in this case, as an InternalError.
+
+
+- Future
+
+In the future, we are looking to use 8.4's ability to set customized error codes to handle Exceptable exceptions.
+We will be adding support for normal PGCode error codes in the next release.
+
+-- Contact
+
+Questions or issues can be directed to the Exceptable mailing list, at
+exceptable@lists.commandprompt.com
+https://lists.commandprompt.com/mailman/listinfo/exceptable
