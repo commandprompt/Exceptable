@@ -18,7 +18,7 @@ setup(
     """,
     author='Aurynn Shaw, Commandprompt, Inc.',
     author_email='ashaw@commandprompt.com',
-    url='https://projects.commandprompt.com/public/exceptable/wiki',
+    url='https://public.commandprompt.com/projects/exceptable/wiki',
     download_url='https://projects.commandprompt.com/public/exceptable/repo/dist/Exceptable-0.1.0.tar.gz',
     # install_requires=[
     # ],

@@ -1,0 +1,23 @@
+Metadata-Version: 1.0
+Name: Exceptable
+Version: 0.1.0
+Summary: DB Exception Management
+Home-page: https://public.commandprompt.com/projects/exceptable/wiki
+Author: Aurynn Shaw, Commandprompt, Inc.
+Author-email: ashaw@commandprompt.com
+License: LGPL
+Download-URL: https://projects.commandprompt.com/public/exceptable/repo/dist/Exceptable-0.1.0.tar.gz
+Description: 
+        What is Exceptable?
+        ===================
+        Exceptable is a library that handles matching formatted exceptions raised
+        in PostgreSQL to Python exception types, allowing for a simple and easy
+        process for the database to throw a named exception in Python.
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Unix
+Classifier: Topic :: Software Development

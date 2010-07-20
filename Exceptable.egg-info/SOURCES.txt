@@ -1,0 +1,16 @@
+LICENSE
+MANIFEST.in
+README
+setup.py
+Exceptable.egg-info/PKG-INFO
+Exceptable.egg-info/SOURCES.txt
+Exceptable.egg-info/dependency_links.txt
+Exceptable.egg-info/top_level.txt
+Exceptable.egg-info/zip-safe
+exceptable/__init__.py
+exceptable/base.py
+sql/base.sql
+sql/exceptable-8.4.sql
+sql/exceptable.sql
+test/__init__.py
+test/test_base.py
